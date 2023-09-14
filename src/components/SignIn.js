@@ -43,15 +43,20 @@ const SignIn = () => {
 
   const loginHandler = async () => {
     try {
+      const { email, password } = data;
+      if (!email || !password) {
+        toastr.warning("All Fields required");
+        return;
+      }
       const fetchData = await post(`/api/admin/signin`, data);
-      console.log("data", fetchData);
-      const { token } = fetchData.data;
-      if (token) {
+      // console.log("data", fetchData);
+      const { token, success, message } = fetchData.data;
+      if (token && success) {
         localStorage.setItem("token", token);
         toastr.success("Login Successful");
         history.push("/");
       } else {
-        toastr.error("Please check you email or password!", "Error");
+        toastr.error(`${message}`, "Error");
         return;
       }
     } catch (err) {

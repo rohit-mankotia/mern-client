@@ -36,13 +36,18 @@ const SignUp = () => {
       // if (!/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(data.email)) {
       //  return alert('Enter valid email')
       // }
+      const { firstName, lastName, email, password } = data; //author
+      if (!firstName || !lastName || !email || !password) {
+        toastr.warning("All Fields required");
+        return;
+      }
       const fetchData = await post(`/api/admin/signup`, data);
-      console.log(fetchData.data);
-      if (fetchData.data.success === true) {
+      // console.log(fetchData.data);
+      if (fetchData.data.success) {
         history.push("/signin");
         toastr.success("Signup Success");
       } else {
-        toastr.error("Something went wrong");
+        toastr.error(`${fetchData.data.message}`);
       }
     } catch (err) {
       toastr.error("Something went wrong");

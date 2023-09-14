@@ -60,7 +60,6 @@ const NavBar = (props) => {
                   Create Blog
                 </Link>
               )}
-              {token && <Button onClick={handleLogout}>Logout</Button>}
             </div>
             {!token && (
               <div className="navbar-nav ms-auto">
@@ -70,6 +69,11 @@ const NavBar = (props) => {
                 <Link to="/signup" className="nav-link">
                   Signup
                 </Link>
+              </div>
+            )}
+            {token && (
+              <div className="navbar-nav ms-auto">
+                <Button onClick={handleLogout}>Logout</Button>
               </div>
             )}
           </div>
