@@ -1,19 +1,24 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { Link } from "react-router-dom";
+import toastr from "toastr";
 
-import { URL } from "../utils/config";
+import { get } from "../utils/config";
 
 const India = () => {
   const [blogs, setBlogs] = useState([]);
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await axios.get(`${URL}/api/searchbycategory/india`);
-      console.log("MyData", data);
-      setBlogs(data.data.blogs);
-    };
     fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const data = await get(`/api/searchbycategory/india`);
+      // console.log("MyData", data);
+      // toastr.success("Success");
+      setBlogs(data.data.blogs);
+    } catch (error) {
+      toastr.error("Server Error", "Error");
+    }
+  };
 
   return (
     <div className="container">
@@ -33,9 +38,9 @@ const India = () => {
                 <h3 className="mb-0 text-dark">{item.title}</h3>
                 <div className="mb-1 text-muted">Nov 12</div>
                 <p className="card-text mb-auto">{item.description}</p>
-                <Link to={item.link} blank="">
-                  Continue reading
-                </Link>
+                <span onClick={() => window.open(item.link)}>
+                  continue reading...
+                </span>
                 <h6 className="my-2 text-dark">Posted By: {item.author} </h6>
               </div>
               <img

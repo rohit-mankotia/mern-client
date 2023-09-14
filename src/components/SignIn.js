@@ -1,12 +1,39 @@
-import React, { useState } from "react";
-import axios from "axios";
-// import { useHistory } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import toastr from "toastr";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  CardBody,
+  Button,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+} from "reactstrap";
 
-import { URL } from "../utils/config";
+import { post } from "../utils/config";
 
 const SignIn = () => {
-  //   const history = useHistory();
-  const [data, setData] = useState({ email: "", password: "" });
+  const [data, setData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const history = useHistory();
+
+  useEffect(() => {
+    isLoginChk();
+  });
+
+  const isLoginChk = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      history.push("/");
+    }
+  };
 
   const handleInput = (e) => {
     const name = e.target.name;
@@ -14,56 +41,67 @@ const SignIn = () => {
     setData({ ...data, [name]: value });
   };
 
-  const PostData = async () => {
+  const loginHandler = async () => {
     try {
-      const fetchData = await axios.post(`${URL}/api/admin/signin`, data);
+      const fetchData = await post(`/api/admin/signin`, data);
       console.log("data", fetchData);
+      const { token } = fetchData.data;
+      if (token) {
+        localStorage.setItem("token", token);
+        toastr.success("Login Successful");
+        history.push("/");
+      } else {
+        toastr.error("Please check you email or password!", "Error");
+        return;
+      }
     } catch (err) {
+      toastr.error("Login Error", "Error");
       console.log(err);
     }
   };
 
   return (
-    <div className="container my-4">
-      <div className="text-center">
-        <main className="form-signin">
-          <form>
-            <h1 className="h3 mb-3 fw-normal">Sign In</h1>
-            <div className="form-floating my-2">
-              <input
-                name="email"
-                value={data.email}
-                onChange={handleInput}
-                type="email"
-                className="form-control"
-                id="floatingInput"
-                placeholder="name@example.com"
-              />
-              <label htmlFor="floatingInput">Email address</label>
-            </div>
-            <div className="form-floating my-2">
-              <input
-                name="password"
-                value={data.password}
-                onChange={handleInput}
-                type="password"
-                className="form-control"
-                id="floatingPassword"
-                placeholder="Password"
-              />
-              <label htmlFor="floatingPassword">Password</label>
-            </div>
-            <button
-              onClick={PostData}
-              className="w-100 btn btn-lg btn-primary"
-              type="submit"
-            >
-              Signin
-            </button>
-          </form>
-        </main>
-      </div>
-    </div>
+    <Container fluid className="my-4">
+      <Row>
+        <Col xs={12} sm={8} md={6} lg={4} className="mx-auto">
+          <Card>
+            <CardBody>
+              <h1 className="h3 mb-3 fw-normal text-center">Sign In</h1>
+              <Form>
+                <FormGroup>
+                  <Label for="email">Email Address</Label>
+                  <Input
+                    type="email"
+                    name="email"
+                    id="email"
+                    value={data.email}
+                    onChange={handleInput}
+                    placeholder="Email Address"
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Label for="password">Password</Label>
+                  <Input
+                    type="password"
+                    name="password"
+                    id="password"
+                    value={data.password}
+                    onChange={handleInput}
+                    placeholder="Password"
+                  />
+                </FormGroup>
+                <Button
+                  className="btn-lg btn-primary btn-block"
+                  onClick={loginHandler}
+                >
+                  Sign In
+                </Button>
+              </Form>
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

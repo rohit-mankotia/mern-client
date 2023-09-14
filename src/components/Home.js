@@ -1,22 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
 
-import { URL } from "../utils/config";
+import { get } from "../utils/config";
 
 const Home = () => {
   const [blogs, setBlogs] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const myData = await axios.get(`${URL}/api/admin/allblogs`);
-      console.log("SaveData", myData.data.blogs);
-      setBlogs(myData.data.blogs);
-    };
     fetchData();
   }, []);
 
-  console.log("MysaveData");
+  const fetchData = async () => {
+    const myData = await get(`/api/admin/allblogs`);
+    console.log("SaveData", myData.data.blogs);
+    setBlogs(myData.data.blogs);
+  };
 
   return (
     <div className="container">
@@ -35,8 +32,12 @@ const Home = () => {
                 <h3 className="mb-0 text-dark">{item.title}</h3>
                 <div className="mb-1 text-muted">Nov 12</div>
                 <p className="card-text mb-auto">{item.description}</p>
-                <Link to={item.link}>Continue reading</Link>
-                <h6 className="my-2 text-dark">Posted By: {item.author} </h6>
+                <span onClick={() => window.open(item.link)}>
+                  continue reading...
+                </span>
+                <h6 className="my-2 text-dark">
+                  Posted By: {item.author.firstName}{" "}
+                </h6>
               </div>
               <img
                 className="card-img-right flex-auto d-none d-md-block"

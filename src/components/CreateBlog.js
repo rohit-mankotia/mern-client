@@ -1,9 +1,20 @@
 import React, { useState } from "react";
-import axios from "axios";
-
-import { URL } from "../utils/config";
+import { useHistory } from "react-router-dom";
+import toastr from "toastr";
+import {
+  Container,
+  // Row,
+  // Col,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Button,
+} from "reactstrap";
+import { post } from "../utils/config";
 
 const CreateBlog = () => {
+  const history = useHistory();
   const [blog, setBlog] = useState({
     title: "",
     description: "",
@@ -11,7 +22,7 @@ const CreateBlog = () => {
     link: "",
     category: "",
   });
-  const [picture, setPicture] = useState();
+  // const [picture, setPicture] = useState(null);
 
   const handleInput = (e) => {
     const name = e.target.name;
@@ -19,18 +30,27 @@ const CreateBlog = () => {
     setBlog({ ...blog, [name]: value });
   };
 
+  // const handleFileInput = (e) => {
+  //   setPicture(e.target.files[0]);
+  // };
+
   const PostData = async () => {
     try {
-      const { title, description, author, link, category } = blog;
+      const { title, description, link, category } = blog; //author
+      if (!title || !description || !link || !category) {
+        toastr.warning("All Fields required");
+        return;
+      }
       const data = new FormData();
       data.append("title", title);
       data.append("description", description);
-      data.append("author", author);
+      // data.append("author", author);
       data.append("link", link);
       data.append("category", category);
-      data.append("picture", picture);
+      // data.append("picture", picture);
 
-      const blogData = await axios.post(`${URL}/api/admin/createblog`, data);
+      const blogData = await post(`/api/admin/createblog`, data);
+      history.push("/");
       console.log(blogData);
     } catch (error) {
       console.log(error);
@@ -38,91 +58,91 @@ const CreateBlog = () => {
   };
 
   return (
-    <div className="container">
+    <Container>
       <h1 className="my-4">Create Blog</h1>
-      <div className="mb-3">
-        <label htmlFor="exampleFormControlInput1" className="form-label">
-          Title
-        </label>
-        <input
-          name="title"
-          value={blog.name}
-          onChange={handleInput}
-          type="text"
-          className="form-control"
-        />
-      </div>
-      <div className="mb-3">
-        <label htmlFor="exampleFormControlTextarea1" className="form-label">
-          Description
-        </label>
-        <textarea
-          name="description"
-          value={blog.description}
-          onChange={handleInput}
-          className="form-control"
-          rows="3"
-        ></textarea>
-      </div>
-      <div className="mb-3">
-        <label htmlFor="exampleFormControlInput1" className="form-label">
-          Author
-        </label>
-        <input
-          type="text"
-          name="author"
-          value={blog.author}
-          onChange={handleInput}
-          className="form-control"
-        />
-      </div>
-      <div className="mb-3">
-        <label htmlFor="exampleFormControlInput1" className="form-label">
-          Link
-        </label>
-        <input
-          type="text"
-          name="link"
-          value={blog.link}
-          onChange={handleInput}
-          className="form-control"
-        />
-      </div>
-      <div className="mb-3">
-        <label htmlFor="exampleFormControlTextarea1" className="form-label">
-          Category
-        </label>
-        <select
-          name="category"
-          value={blog.category}
-          onChange={handleInput}
-          className="form-select"
-          aria-label="Default select example"
-        >
-          <option defaultValue>Select Category</option>
-          <option value="india">India</option>
-          <option value="world">World</option>
-          <option value="business">Business</option>
-          <option value="sports">Sports</option>
-        </select>
-      </div>
-      <div className="mb-3">
-        <label htmlFor="formFile" className="form-label">
-          Picture
-        </label>
-        <input
-          className="form-control"
-          type="file"
-          id="formFile"
-          onChange={(e) => setPicture(e.target.files[0])}
-        />
-      </div>
-      <div className="d-grid gap-2">
-        <button className="btn btn-primary" type="submit" onClick={PostData}>
+      <Form>
+        {/* <Row> */}
+        {/* <Col md={6}> */}
+        <FormGroup>
+          <Label for="title">Title</Label>
+          <Input
+            type="text"
+            name="title"
+            id="title"
+            value={blog.title}
+            onChange={handleInput}
+            required
+          />
+        </FormGroup>
+        {/* </Col> */}
+        {/* <Col md={6}>
+            <FormGroup>
+              <Label for="author">Author</Label>
+              <Input
+                type="text"
+                name="author"
+                id="author"
+                value={blog.author}
+                onChange={handleInput}
+                required
+              />
+            </FormGroup>
+          </Col> */}
+        {/* </Row> */}
+        <FormGroup>
+          <Label for="description">Description</Label>
+          <Input
+            type="textarea"
+            name="description"
+            id="description"
+            value={blog.description}
+            onChange={handleInput}
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label for="link">Link</Label>
+          <Input
+            type="text"
+            name="link"
+            id="link"
+            value={blog.link}
+            onChange={handleInput}
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label for="category">Category</Label>
+          <Input
+            type="select"
+            name="category"
+            id="category"
+            value={blog.category}
+            onChange={handleInput}
+            required
+          >
+            <option>Select Category</option>
+            <option value="india">India</option>
+            <option value="world">World</option>
+            <option value="business">Business</option>
+            <option value="sports">Sports</option>
+          </Input>
+        </FormGroup>
+        {/* <FormGroup>
+          <Label for="picture">Picture</Label>
+          <Input
+            type="file"
+            name="picture"
+            id="picture"
+            accept="image/*"
+            onChange={handleFileInput}
+          />
+        </FormGroup> */}
+        <Button color="primary" onClick={PostData}>
           Submit
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Form>
+    </Container>
   );
 };
 

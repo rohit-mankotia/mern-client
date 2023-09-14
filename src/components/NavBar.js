@@ -1,7 +1,25 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useHistory } from "react-router-dom";
+import { Button } from "reactstrap";
+import toastr from "toastr";
 
-const NavBar = () => {
+const NavBar = (props) => {
+  const history = useHistory();
+
+  const [token, setToken] = useState();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setToken("");
+    toastr.success("Logout Successfull", "Logout");
+    history.push("/");
+  };
+
+  useEffect(() => {
+    const getToken = localStorage.getItem("token");
+    setToken(getToken);
+  }, [token]);
+
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -37,18 +55,23 @@ const NavBar = () => {
               <Link to="/sports" className="nav-link">
                 Sports
               </Link>
-              <Link to="/createblog" className="nav-link">
-                Create Blog
-              </Link>
+              {token && (
+                <Link to="/create-blog" className="nav-link">
+                  Create Blog
+                </Link>
+              )}
+              {token && <Button onClick={handleLogout}>Logout</Button>}
             </div>
-            <div className="navbar-nav ms-auto">
-              <Link to="/signin" className="nav-link">
-                Signin
-              </Link>
-              <Link to="/signup" className="nav-link">
-                Signup
-              </Link>
-            </div>
+            {!token && (
+              <div className="navbar-nav ms-auto">
+                <Link to="/signin" className="nav-link">
+                  Signin
+                </Link>
+                <Link to="/signup" className="nav-link">
+                  Signup
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </nav>
