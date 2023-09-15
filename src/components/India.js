@@ -15,7 +15,7 @@ const India = () => {
       // console.log("MyData", data);
       // toastr.success("Success");
       setBlogs(data.data.blogs);
-    } catch (error) {
+    } catch (err) {
       toastr.error("Server Error", "Error");
     }
   };
@@ -43,13 +43,13 @@ const India = () => {
                 </span>
                 <h6 className="my-2 text-dark">Posted By: {item.author} </h6>
               </div>
-              <img
+              {/* <img
                 className="card-img-right flex-auto d-none d-md-block"
                 alt="Thumbnail [200x250]"
                 style={{ width: 250, height: 250 }}
                 src={item.picture}
                 data-holder-rendered="true"
-              />
+              /> */}
             </div>
           );
         })

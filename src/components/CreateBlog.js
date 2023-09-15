@@ -51,9 +51,9 @@ const CreateBlog = () => {
 
       const blogData = await post(`/api/admin/createblog`, data);
       history.push("/");
-      console.log(blogData);
-    } catch (error) {
-      console.log(error);
+      // console.log(blogData);
+    } catch (err) {
+      console.log(err);
     }
   };
 

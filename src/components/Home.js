@@ -10,9 +10,13 @@ const Home = () => {
   }, []);
 
   const fetchData = async () => {
-    const myData = await get(`/api/admin/allblogs`);
-    console.log("SaveData", myData.data.blogs);
-    setBlogs(myData.data.blogs);
+    try {
+      const myData = await get(`/api/admin/allblogs`);
+      // console.log("SaveData", myData.data.blogs);
+      setBlogs(myData.data.blogs);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -39,13 +43,13 @@ const Home = () => {
                   Posted By: {item.author.firstName}{" "}
                 </h6>
               </div>
-              <img
+              {/* <img
                 className="card-img-right flex-auto d-none d-md-block"
                 alt="Thumbnail [200x250]"
                 style={{ width: 250, height: 250 }}
                 src={item.picture}
                 data-holder-rendered="true"
-              />
+              /> */}
             </div>
           );
         })

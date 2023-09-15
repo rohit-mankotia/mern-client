@@ -9,9 +9,13 @@ const World = () => {
   }, []);
 
   const fetchData = async () => {
-    const data = await get(`/api/searchbycategory/world`);
-    console.log("MyData", data);
-    setBlogs(data.data.blogs);
+    try {
+      const data = await get(`/api/searchbycategory/world`);
+      // console.log("MyData", data);
+      setBlogs(data.data.blogs);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -36,13 +40,13 @@ const World = () => {
                 </span>
                 <h6 className="my-2 text-dark">Posted By: {item.author} </h6>
               </div>
-              <img
+              {/* <img
                 className="card-img-right flex-auto d-none d-md-block"
                 alt="Thumbnail [200x250]"
                 style={{ width: 250, height: 250 }}
                 src={item.picture}
                 data-holder-rendered="true"
-              />
+              /> */}
             </div>
           );
         })
