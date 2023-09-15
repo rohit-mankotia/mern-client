@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import toastr from "toastr";
+import moment from "moment";
 
 import { get } from "../utils/config";
 
@@ -22,7 +23,7 @@ const India = () => {
 
   return (
     <div className="container">
-      <h1>India Blogs</h1>
+      {/* <h1>India</h1> */}
       {blogs ? (
         blogs.map((item) => {
           return (
@@ -33,15 +34,20 @@ const India = () => {
               <div className="card-body d-flex flex-column align-items-start">
                 <strong className="d-inline-block mb-2 text-primary">
                   {" "}
-                  {item.category}
+                  {item.category.toUpperCase()}
                 </strong>
                 <h3 className="mb-0 text-dark">{item.title}</h3>
-                <div className="mb-1 text-muted">Nov 12</div>
+                <div className="mb-1 text-muted">
+                  {moment(item.createdAt).format("MMMM Do YYYY")}
+                </div>
                 <p className="card-text mb-auto">{item.description}</p>
                 <span onClick={() => window.open(item.link)}>
                   continue reading...
                 </span>
-                <h6 className="my-2 text-dark">Posted By: {item.author} </h6>
+                <h6 className="my-2 text-dark">
+                  Posted By:{" "}
+                  {`${item.author.firstName} ${item.author.lastName}`}
+                </h6>
               </div>
               {/* <img
                 className="card-img-right flex-auto d-none d-md-block"

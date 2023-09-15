@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import moment from "moment";
 
 import { get } from "../utils/config";
 
@@ -11,8 +12,8 @@ const Home = () => {
 
   const fetchData = async () => {
     try {
-      const myData = await get(`/api/admin/allblogs`);
-      // console.log("SaveData", myData.data.blogs);
+      const myData = await get(`/api/allblogs`);
+      console.log("SaveData", myData.data.blogs);
       setBlogs(myData.data.blogs);
     } catch (err) {
       console.log(err);
@@ -21,7 +22,7 @@ const Home = () => {
 
   return (
     <div className="container">
-      <h1>Blogs</h1>
+      {/* <h1>Blogs</h1> */}
       {blogs ? (
         blogs.map((item) => {
           return (
@@ -31,16 +32,19 @@ const Home = () => {
             >
               <div className="card-body d-flex flex-column align-items-start">
                 <strong className="d-inline-block mb-2 text-primary">
-                  {item.category}
+                  {item.category.toUpperCase()}
                 </strong>
                 <h3 className="mb-0 text-dark">{item.title}</h3>
-                <div className="mb-1 text-muted">Nov 12</div>
+                <div className="mb-1 text-muted">
+                  {moment(item.createdAt).format("MMMM Do YYYY")}
+                </div>
                 <p className="card-text mb-auto">{item.description}</p>
                 <span onClick={() => window.open(item.link)}>
                   continue reading...
                 </span>
                 <h6 className="my-2 text-dark">
-                  Posted By: {item.author.firstName}{" "}
+                  Posted By:{" "}
+                  {`${item.author.firstName} ${item.author.lastName}`}
                 </h6>
               </div>
               {/* <img

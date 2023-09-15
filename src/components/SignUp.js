@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import toastr from "toastr";
 import {
@@ -24,6 +24,17 @@ const SignUp = () => {
     email: "",
     password: "",
   });
+
+  useEffect(() => {
+    isLoginChk();
+  });
+
+  const isLoginChk = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      history.push("/");
+    }
+  };
 
   const handleInput = (e) => {
     const name = e.target.name;
